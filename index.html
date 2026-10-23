@@ -760,8 +760,9 @@
         if (error) throw error;
         if (data.user) openApp(data.user);
       } catch (error) {
-        setStatus("Não foi possível entrar. Confira seu e-mail e senha.");
-      } finally {
+  console.error("Erro de login:", error);
+  setStatus(`Erro de login: ${error.message || "Erro desconhecido"}`);
+} finally {
         button.disabled = false;
       }
     });
