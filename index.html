@@ -1,0 +1,858 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10271f">
+  <title>Ritual — Your own little world</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --forest: #10271f;
+      --forest2: #193b2e;
+      --green: #78917a;
+      --cream: #f3eddf;
+      --muted: #b5b9a8;
+      --card: #1b3429;
+      --line: #385044;
+      --gold: #c5ad7b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--forest);
+      color: var(--cream);
+      font-family: Georgia, "Times New Roman", serif;
+      min-height: 100vh;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    button { cursor: pointer; }
+
+    .hidden { display: none !important; }
+
+    .eyebrow {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font: 10px Arial, sans-serif;
+    }
+
+    .brand {
+      font-size: 30px;
+      letter-spacing: 5px;
+      margin: 0;
+      font-weight: normal;
+    }
+
+    .brand span { color: var(--green); }
+
+    .muted { color: var(--muted); }
+
+    .auth-screen {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 25px;
+      background:
+        radial-gradient(ellipse at top, #294c38 0%, transparent 60%),
+        var(--forest);
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 410px;
+      padding: 32px 25px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(16, 39, 31, .92);
+      text-align: center;
+    }
+
+    .auth-card .subtitle {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+      margin: 15px 0 28px;
+    }
+
+    .field {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #0c2019;
+      color: var(--cream);
+      padding: 14px;
+      border-radius: 10px;
+      outline: none;
+      margin-bottom: 12px;
+    }
+
+    .field:focus { border-color: var(--gold); }
+
+    .primary, .secondary, .nav-button {
+      border-radius: 10px;
+      padding: 13px 16px;
+      border: 1px solid var(--line);
+      color: var(--cream);
+      background: var(--forest2);
+    }
+
+    .primary {
+      width: 100%;
+      background: var(--cream);
+      color: var(--forest);
+      border-color: var(--cream);
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .secondary {
+      background: transparent;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .small {
+      font: 12px Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    .status {
+      min-height: 20px;
+      margin-top: 12px;
+      color: var(--gold);
+      font: 12px Arial, sans-serif;
+      overflow-wrap: anywhere;
+    }
+
+    header {
+      padding: 22px 20px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    header .brand { font-size: 22px; }
+
+    .avatar {
+      display: inline-flex;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--green);
+      color: var(--forest);
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    main {
+      max-width: 800px;
+      margin: auto;
+      padding: 25px 18px 110px;
+    }
+
+    .greeting {
+      font-size: clamp(29px, 7vw, 43px);
+      line-height: 1.15;
+      font-weight: normal;
+      margin: 12px 0;
+    }
+
+    .greeting em { color: var(--green); }
+
+    .date-line {
+      color: var(--muted);
+      font: 11px Arial, sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .hero {
+      border-radius: 18px;
+      padding: 23px;
+      margin: 25px 0;
+      background:
+        linear-gradient(140deg, rgba(25,59,46,.96), rgba(16,39,31,.96));
+      border: 1px solid var(--line);
+    }
+
+    .hero h2 { font-size: 24px; font-weight: normal; }
+
+    .hero p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: normal;
+      margin: 27px 0 15px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .tile {
+      min-height: 125px;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+      text-align: left;
+      color: var(--cream);
+      transition: .2s;
+    }
+
+    .tile:active { transform: scale(.98); }
+
+    .tile .symbol {
+      font-size: 23px;
+      display: block;
+      margin-bottom: 14px;
+      color: var(--gold);
+    }
+
+    .tile strong {
+      display: block;
+      font-weight: normal;
+      font-size: 16px;
+    }
+
+    .tile small {
+      display: block;
+      color: var(--muted);
+      font: 11px Arial, sans-serif;
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: var(--card);
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .panel h3 {
+      font-size: 19px;
+      font-weight: normal;
+      margin-top: 0;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    .check-row:last-child { border-bottom: 0; }
+
+    .check-row input {
+      accent-color: var(--green);
+      width: 18px;
+      height: 18px;
+    }
+
+    .friend-row {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .friend-row:last-child { border-bottom: 0; }
+
+    .friend-row p {
+      margin: 5px 0 0;
+      font: 11px Arial, sans-serif;
+      color: var(--muted);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 6px 9px;
+      color: var(--gold);
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      font: 10px Arial, sans-serif;
+    }
+
+    .message-placeholder {
+      border: 1px dashed var(--line);
+      border-radius: 13px;
+      padding: 24px 17px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .chat-bubble {
+      background: var(--forest2);
+      border: 1px solid var(--line);
+      padding: 12px 14px;
+      border-radius: 13px 13px 13px 3px;
+      margin: 12px 0;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .notice {
+      color: var(--muted);
+      font: 11px Arial, sans-serif;
+      line-height: 1.6;
+      margin-top: 14px;
+    }
+
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-around;
+      gap: 4px;
+      padding: 10px 4px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(12, 32, 25, .97);
+      border-top: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-button {
+      flex: 1;
+      padding: 10px 2px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font: 10px Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .nav-button span { font-size: 19px; }
+
+    .nav-button.active {
+      background: var(--forest2);
+      color: var(--cream);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font: 10px Arial, sans-serif;
+      letter-spacing: 2px;
+      padding: 25px 0;
+    }
+
+    @media (min-width: 600px) {
+      main { padding-top: 35px; }
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .auth-card { padding: 40px; }
+    }
+  </style>
+</head>
+
+<body>
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <p class="eyebrow">A softer way to grow</p>
+      <h1 class="brand">RITUAL<span>.</span></h1>
+      <p class="subtitle">
+        Um pequeno universo seu.<br>
+        Para cuidar de si e crescer juntas.
+      </p>
+
+      <form id="authForm">
+        <input
+          id="email"
+          class="field"
+          type="email"
+          placeholder="Seu e-mail"
+          autocomplete="email"
+          required
+        >
+        <input
+          id="password"
+          class="field"
+          type="password"
+          placeholder="Sua senha"
+          autocomplete="current-password"
+          minlength="6"
+          required
+        >
+        <button id="loginButton" class="primary" type="submit">
+          Entrar no meu Ritual
+        </button>
+        <button id="signupButton" class="secondary" type="button">
+          Criar minha conta
+        </button>
+        <button id="resetButton" class="secondary" type="button">
+          Esqueci minha senha
+        </button>
+      </form>
+
+      <p id="authStatus" class="status" role="status"></p>
+      <p class="notice">
+        Sua conta é pessoal. Não compartilhe sua senha com amigas.
+      </p>
+    </div>
+  </section>
+
+  <section id="appScreen" class="hidden">
+    <header>
+      <div>
+        <p class="eyebrow" style="margin:0 0 6px">Your own little world</p>
+        <h1 class="brand">RITUAL<span>.</span></h1>
+      </div>
+      <button class="secondary" style="width:auto;margin:0"
+        onclick="showPage('perfil')">
+        <span id="avatar" class="avatar">R</span>
+      </button>
+    </header>
+
+    <main>
+      <section id="page-inicio" class="page">
+        <p id="today" class="date-line"></p>
+        <h2 class="greeting">Volte para si,<br><em>um ritual de cada vez.</em></h2>
+        <p id="welcome" class="muted small"></p>
+
+        <div class="hero">
+          <p class="eyebrow">A little reminder</p>
+          <h2>Você não precisa fazer tudo.</h2>
+          <p>
+            Só precisa cuidar de si com carinho.
+            Pequenos hábitos também constroem uma vida bonita.
+          </p>
+          <span class="tag">Slow down · Grow · Bloom</span>
+        </div>
+
+        <h2 class="section-title">Seu universo</h2>
+        <div class="grid">
+          <button class="tile" onclick="showPage('rotina')">
+            <span class="symbol">✧</span>
+            <strong>Meus rituais</strong>
+            <small>Hábitos e skincare</small>
+          </button>
+          <button class="tile" onclick="showPage('corpo')">
+            <span class="symbol">❋</span>
+            <strong>Corpo & movimento</strong>
+            <small>Treinos, yoga e alongamento</small>
+          </button>
+          <button class="tile" onclick="showPage('diario')">
+            <span class="symbol">☾</span>
+            <strong>Meu diário</strong>
+            <small>Escreva para si</small>
+          </button>
+          <button class="tile" onclick="showPage('amigas')">
+            <span class="symbol">♧</span>
+            <strong>Amigas</strong>
+            <small>Crescer juntas</small>
+          </button>
+          <button class="tile" onclick="showPage('chat')">
+            <span class="symbol">♡</span>
+            <strong>Nossas conversas</strong>
+            <small>Mensagens e grupos</small>
+          </button>
+          <button class="tile" onclick="showPage('calendario')">
+            <span class="symbol">✧</span>
+            <strong>Calendário</strong>
+            <small>Planos e lembretes</small>
+          </button>
+        </div>
+
+        <footer>GROW AT YOUR OWN PACE</footer>
+      </section>
+
+      <section id="page-rotina" class="page hidden">
+        <p class="eyebrow">Your daily rituals</p>
+        <h2 class="greeting">Meus <em>rituais.</em></h2>
+        <p class="muted">Pequenos gestos, feitos com intenção.</p>
+
+        <div class="panel">
+          <h3>Rotina de hoje</h3>
+          <label class="check-row"><input type="checkbox"> Skincare da manhã</label>
+          <label class="check-row"><input type="checkbox"> Beber água</label>
+          <label class="check-row"><input type="checkbox"> Cuidar dos cabelos</label>
+          <label class="check-row"><input type="checkbox"> Skincare da noite</label>
+          <label class="check-row"><input type="checkbox"> Organizar o dia de amanhã</label>
+        </div>
+
+        <div class="panel">
+          <h3>Meus produtos</h3>
+          <p class="muted small">
+            Aqui ficará sua coleção de produtos, etapas da rotina
+            e frequência de uso.
+          </p>
+          <span class="tag">Em preparação</span>
+        </div>
+      </section>
+
+      <section id="page-corpo" class="page hidden">
+        <p class="eyebrow">Movement & wellbeing</p>
+        <h2 class="greeting">Cuide do <em>seu corpo.</em></h2>
+        <div class="grid">
+          <div class="tile"><span class="symbol">❋</span><strong>Treinos</strong><small>Exercícios e cargas</small></div>
+          <div class="tile"><span class="symbol">☾</span><strong>Yoga</strong><small>Alongamento e mobilidade</small></div>
+          <div class="tile"><span class="symbol">♡</span><strong>Meu progresso</strong><small>Medidas e peso opcionais</small></div>
+        </div>
+        <div class="panel" style="margin-top:15px">
+          <h3>Movimento sem cobrança</h3>
+          <p class="muted">Seu progresso é seu. Você decide o que compartilhar com suas amigas.</p>
+          <span class="tag">Em preparação</span>
+        </div>
+      </section>
+
+      <section id="page-diario" class="page hidden">
+        <p class="eyebrow">A letter to yourself</p>
+        <h2 class="greeting">Meu <em>diário.</em></h2>
+        <div class="panel">
+          <h3>Como você está se sentindo?</h3>
+          <p class="muted small">
+            Seu diário será privado por padrão.
+            Não escreva informações sensíveis nesta versão inicial:
+            o salvamento seguro será configurado na próxima etapa.
+          </p>
+          <textarea class="field" rows="5"
+            placeholder="O que está passando pelo seu coração?"></textarea>
+          <span class="tag">Área visual — salvamento ainda não ativado</span>
+        </div>
+      </section>
+
+      <section id="page-amigas" class="page hidden">
+        <p class="eyebrow">Growing together</p>
+        <h2 class="greeting">Nosso <em>círculo.</em></h2>
+        <div class="panel">
+          <h3>Suas amigas</h3>
+          <p class="muted small">
+            Convide suas amigas por e-mail ou código de convite.
+            Cada uma terá seu perfil e escolherá as atividades que deseja compartilhar.
+          </p>
+          <p class="notice">
+            A busca de amigas, os convites e os perfis compartilhados
+            serão ativados depois de configurarmos o banco e as permissões.
+          </p>
+          <span class="tag">Amizades ainda não conectadas</span>
+        </div>
+      </section>
+
+      <section id="page-chat" class="page hidden">
+        <p class="eyebrow">A little space for us</p>
+        <h2 class="greeting">Entre <em>amigas.</em></h2>
+        <div class="panel">
+          <h3>Mensagens</h3>
+          <div class="message-placeholder">
+            ♡<br><br>
+            “Amiga, bora treinar hoje?”<br>
+            “Você já fez seu skincare?”<br><br>
+            Suas conversas individuais e em grupo
+            aparecerão aqui quando o chat estiver conectado.
+          </div>
+          <p class="notice">
+            Não envie mensagens nesta tela ainda: o chat real será
+            implementado com autenticação, participantes e regras de acesso.
+          </p>
+        </div>
+      </section>
+
+      <section id="page-calendario" class="page hidden">
+        <p class="eyebrow">Make room for yourself</p>
+        <h2 class="greeting">Seu <em>calendário.</em></h2>
+        <div class="panel">
+          <h3>Planos e lembretes</h3>
+          <p class="muted small">
+            Seus compromissos, rotinas e metas terão uma visão
+            diária e mensal. Também poderemos criar lembretes
+            compartilhados com suas amigas.
+          </p>
+          <span class="tag">Calendário em preparação</span>
+        </div>
+      </section>
+
+      <section id="page-perfil" class="page hidden">
+        <p class="eyebrow">This is your world</p>
+        <h2 class="greeting">Meu <em>perfil.</em></h2>
+        <div class="panel">
+          <span id="profileAvatar" class="avatar">R</span>
+          <h3 id="profileEmail"></h3>
+          <p class="muted small">
+            Você poderá personalizar seu nome, foto e preferências
+            de compartilhamento.
+          </p>
+          <button id="logoutButton" class="secondary">Sair da conta</button>
+        </div>
+      </section>
+    </main>
+
+    <nav aria-label="Navegação principal">
+      <button class="nav-button active" data-page="inicio" onclick="showPage('inicio')"><span>⌂</span>Início</button>
+      <button class="nav-button" data-page="rotina" onclick="showPage('rotina')"><span>✧</span>Rituais</button>
+      <button class="nav-button" data-page="corpo" onclick="showPage('corpo')"><span>❋</span>Corpo</button>
+      <button class="nav-button" data-page="amigas" onclick="showPage('amigas')"><span>♧</span>Amigas</button>
+      <button class="nav-button" data-page="chat" onclick="showPage('chat')"><span>♡</span>Chat</button>
+    </nav>
+  </section>
+
+  <script>
+    /*
+      RITUAL — CONFIGURAÇÃO
+      Use apenas a Project URL e a Publishable key
+      do projeto Supabase EXCLUSIVO do Ritual.
+      Nunca coloque uma Secret key neste arquivo.
+    */
+    const SUPABASE_URL = "COLE_AQUI_A_PROJECT_URL";
+    const SUPABASE_KEY = "COLE_AQUI_A_PUBLISHABLE_KEY";
+
+    let supabaseClient = null;
+    let currentUser = null;
+
+    const authScreen = document.getElementById("authScreen");
+    const appScreen = document.getElementById("appScreen");
+    const authStatus = document.getElementById("authStatus");
+    const authForm = document.getElementById("authForm");
+
+    function setStatus(message) {
+      authStatus.textContent = message;
+    }
+
+    function configured() {
+      return SUPABASE_URL.startsWith("https://") &&
+        SUPABASE_KEY.startsWith("sb_publishable_") ||
+        (SUPABASE_URL.startsWith("https://") &&
+        SUPABASE_KEY.startsWith("eyJ"));
+    }
+
+    function getInitial(email) {
+      return (email || "R").trim().charAt(0).toUpperCase();
+    }
+
+    function openApp(user) {
+      currentUser = user;
+      authScreen.classList.add("hidden");
+      appScreen.classList.remove("hidden");
+
+      const email = user.email || "";
+      const initial = getInitial(email);
+
+      document.getElementById("welcome").textContent =
+        "Conectada como " + email;
+      document.getElementById("profileEmail").textContent = email;
+      document.getElementById("avatar").textContent = initial;
+      document.getElementById("profileAvatar").textContent = initial;
+
+      const today = new Date();
+      document.getElementById("today").textContent =
+        today.toLocaleDateString("pt-BR", {
+          weekday: "long",
+          day: "numeric",
+          month: "long"
+        });
+
+      showPage("inicio");
+    }
+
+    function showAuth(message = "") {
+      appScreen.classList.add("hidden");
+      authScreen.classList.remove("hidden");
+      setStatus(message);
+    }
+
+    function showPage(name) {
+      document.querySelectorAll(".page").forEach(page => {
+        page.classList.add("hidden");
+      });
+
+      const page = document.getElementById("page-" + name);
+      if (page) page.classList.remove("hidden");
+
+      document.querySelectorAll(".nav-button").forEach(button => {
+        button.classList.toggle(
+          "active",
+          button.dataset.page === name
+        );
+      });
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    async function init() {
+      if (!configured()) {
+        showAuth("Falta configurar a URL e a chave publicável do Supabase.");
+        return;
+      }
+
+      if (!window.supabase) {
+        showAuth("Não foi possível carregar o serviço de autenticação. Verifique sua conexão.");
+        return;
+      }
+
+      supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+      const { data, error } = await supabaseClient.auth.getSession();
+
+      if (error) {
+        showAuth("Não foi possível verificar sua sessão. Tente novamente.");
+        return;
+      }
+
+      if (data.session) {
+        openApp(data.session.user);
+      }
+
+      supabaseClient.auth.onAuthStateChange((_event, session) => {
+        if (session) {
+          openApp(session.user);
+        } else {
+          currentUser = null;
+          showAuth();
+        }
+      });
+    }
+
+    authForm.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      if (!supabaseClient) {
+        setStatus("Configure primeiro a URL e a chave publicável do Supabase.");
+        return;
+      }
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      const button = document.getElementById("loginButton");
+      button.disabled = true;
+      setStatus("Entrando...");
+
+      try {
+        const { data, error } =
+          await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+          });
+
+        if (error) throw error;
+        if (data.user) openApp(data.user);
+      } catch (error) {
+        setStatus("Não foi possível entrar. Confira seu e-mail e senha.");
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    document.getElementById("signupButton").addEventListener(
+      "click", async () => {
+        if (!supabaseClient) {
+          setStatus("Configure primeiro a URL e a chave publicável do Supabase.");
+          return;
+        }
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        if (!email || password.length < 6) {
+          setStatus("Informe um e-mail válido e uma senha com pelo menos 6 caracteres.");
+          return;
+        }
+
+        setStatus("Criando sua conta...");
+
+        try {
+          const { data, error } = await supabaseClient.auth.signUp({
+            email,
+            password,
+            options: {
+              emailRedirectTo: window.location.origin +
+                window.location.pathname
+            }
+          });
+
+          if (error) throw error;
+
+          if (data.session) {
+            openApp(data.session.user);
+          } else {
+            setStatus("Conta criada! Confira seu e-mail para confirmar o cadastro antes de entrar.");
+          }
+        } catch (error) {
+          setStatus("Não foi possível criar a conta. Confira os dados e tente novamente.");
+        }
+      }
+    );
+
+    document.getElementById("resetButton").addEventListener(
+      "click", async () => {
+        if (!supabaseClient) {
+          setStatus("Configure primeiro a URL e a chave publicável do Supabase.");
+          return;
+        }
+
+        const email = document.getElementById("email").value.trim();
+
+        if (!email) {
+          setStatus("Digite seu e-mail no campo acima.");
+          return;
+        }
+
+        setStatus("Enviando solicitação...");
+
+        try {
+          const { error } =
+            await supabaseClient.auth.resetPasswordForEmail(email, {
+              redirectTo: window.location.origin +
+                window.location.pathname
+            });
+
+          if (error) throw error;
+
+          setStatus("Se o endereço estiver cadastrado, você receberá instruções por e-mail.");
+        } catch (error) {
+          setStatus("Não foi possível solicitar a recuperação agora.");
+        }
+      }
+    );
+
+    document.getElementById("logoutButton").addEventListener(
+      "click", async () => {
+        if (!supabaseClient) return;
+
+        const { error } = await supabaseClient.auth.signOut();
+
+        if (error) {
+          alert("Não foi possível sair da conta. Tente novamente.");
+        } else {
+          showAuth("Você saiu da sua conta.");
+        }
+      }
+    );
+
+    init();
+  </script>
+</body>
+</html>
