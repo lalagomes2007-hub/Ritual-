@@ -758,7 +758,18 @@
           });
 
         if (error) throw error;
-        if (data.user) openApp(data.user);
+
+console.log("LOGIN: resposta recebida", {
+  user: !!data.user,
+  session: !!data.session
+});
+
+if (data.session && data.user) {
+  setStatus("Login confirmado! Abrindo o Ritual...");
+  openApp(data.user);
+} else {
+  setStatus("O login não retornou uma sessão. Verifique a configuração de autenticação.");
+}
       } catch (error) {
   console.error("Erro de login:", error);
   setStatus(`Erro de login: ${error.message || "Erro desconhecido"}`);
