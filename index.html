@@ -752,10 +752,25 @@
 
       try {
         const { data, error } =
-          await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-          });
+  await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+if (error) {
+  setStatus("Falha no login: " + error.message);
+  return;
+}
+
+setStatus(
+  "Login aceito. Sessão: " +
+  (data.session ? "recebida" : "ausente") +
+  ". Abrindo o aplicativo..."
+);
+
+if (data.user && data.session) {
+  openApp(data.user);
+}
 
         if (error) throw error;
 
