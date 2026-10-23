@@ -801,10 +801,11 @@
           } else {
             setStatus("Conta criada! Confira seu e-mail para confirmar o cadastro antes de entrar.");
           }
-        } catch (error) {
-          setStatus("Não foi possível criar a conta. Confira os dados e tente novamente.");
-        }
-      }
+        
+      } catch (error) {
+  console.error("Erro ao criar conta:", error);
+  setStatus(`Erro ao criar conta: ${error.message || "Erro desconhecido"}`);
+}
     );
 
     document.getElementById("resetButton").addEventListener(
