@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10271f">
   <title>Ritual — Your own little world</title>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -31,12 +30,9 @@
       min-height: 100vh;
     }
 
-    button, input, textarea, select {
-      font: inherit;
-    }
-
+    button, input, textarea, select { font: inherit; }
     button { cursor: pointer; }
-
+    button:disabled { opacity: .6; cursor: wait; }
     .hidden { display: none !important; }
 
     .eyebrow {
@@ -54,7 +50,6 @@
     }
 
     .brand span { color: var(--green); }
-
     .muted { color: var(--muted); }
 
     .auth-screen {
@@ -86,6 +81,7 @@
     }
 
     .field {
+      display: block;
       width: 100%;
       border: 1px solid var(--line);
       background: #0c2019;
@@ -183,8 +179,7 @@
       border-radius: 18px;
       padding: 23px;
       margin: 25px 0;
-      background:
-        linear-gradient(140deg, rgba(25,59,46,.96), rgba(16,39,31,.96));
+      background: linear-gradient(140deg, rgba(25,59,46,.96), rgba(16,39,31,.96));
       border: 1px solid var(--line);
     }
 
@@ -273,22 +268,6 @@
       height: 18px;
     }
 
-    .friend-row {
-      display: flex;
-      align-items: center;
-      gap: 13px;
-      padding: 13px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .friend-row:last-child { border-bottom: 0; }
-
-    .friend-row p {
-      margin: 5px 0 0;
-      font: 11px Arial, sans-serif;
-      color: var(--muted);
-    }
-
     .tag {
       display: inline-block;
       padding: 6px 9px;
@@ -306,16 +285,6 @@
       text-align: center;
       line-height: 1.7;
       font-size: 14px;
-    }
-
-    .chat-bubble {
-      background: var(--forest2);
-      border: 1px solid var(--line);
-      padding: 12px 14px;
-      border-radius: 13px 13px 13px 3px;
-      margin: 12px 0;
-      font-size: 14px;
-      line-height: 1.6;
     }
 
     .notice {
@@ -381,44 +350,21 @@
     <div class="auth-card">
       <p class="eyebrow">A softer way to grow</p>
       <h1 class="brand">RITUAL<span>.</span></h1>
-      <p class="subtitle">
-        Um pequeno universo seu.<br>
-        Para cuidar de si e crescer juntas.
-      </p>
+      <p class="subtitle">Um pequeno universo seu.<br>Para cuidar de si e crescer juntas.</p>
 
       <form id="authForm">
-        <input
-          id="email"
-          class="field"
-          type="email"
-          placeholder="Seu e-mail"
-          autocomplete="email"
-          required
-        >
-        <input
-          id="password"
-          class="field"
-          type="password"
-          placeholder="Sua senha"
-          autocomplete="current-password"
-          minlength="6"
-          required
-        >
-        <button id="loginButton" class="primary" type="submit">
-          Entrar no meu Ritual
-        </button>
-        <button id="signupButton" class="secondary" type="button">
-          Criar minha conta
-        </button>
-        <button id="resetButton" class="secondary" type="button">
-          Esqueci minha senha
-        </button>
+        <input id="email" class="field" type="email" placeholder="Seu e-mail"
+          autocomplete="email" required>
+        <input id="password" class="field" type="password" placeholder="Sua senha"
+          autocomplete="current-password" minlength="6" required>
+
+        <button id="loginButton" class="primary" type="submit">Entrar no meu Ritual</button>
+        <button id="signupButton" class="secondary" type="button">Criar minha conta</button>
+        <button id="resetButton" class="secondary" type="button">Esqueci minha senha</button>
       </form>
 
-      <p id="authStatus" class="status" role="status"></p>
-      <p class="notice">
-        Sua conta é pessoal. Não compartilhe sua senha com amigas.
-      </p>
+      <p id="authStatus" class="status" role="status" aria-live="polite"></p>
+      <p class="notice">Sua conta é pessoal. Não compartilhe sua senha com amigas.</p>
     </div>
   </section>
 
@@ -429,7 +375,7 @@
         <h1 class="brand">RITUAL<span>.</span></h1>
       </div>
       <button class="secondary" style="width:auto;margin:0"
-        onclick="showPage('perfil')">
+        onclick="showPage('perfil')" aria-label="Abrir perfil">
         <span id="avatar" class="avatar">R</span>
       </button>
     </header>
@@ -443,47 +389,19 @@
         <div class="hero">
           <p class="eyebrow">A little reminder</p>
           <h2>Você não precisa fazer tudo.</h2>
-          <p>
-            Só precisa cuidar de si com carinho.
-            Pequenos hábitos também constroem uma vida bonita.
-          </p>
+          <p>Só precisa cuidar de si com carinho. Pequenos hábitos também constroem uma vida bonita.</p>
           <span class="tag">Slow down · Grow · Bloom</span>
         </div>
 
         <h2 class="section-title">Seu universo</h2>
         <div class="grid">
-          <button class="tile" onclick="showPage('rotina')">
-            <span class="symbol">✧</span>
-            <strong>Meus rituais</strong>
-            <small>Hábitos e skincare</small>
-          </button>
-          <button class="tile" onclick="showPage('corpo')">
-            <span class="symbol">❋</span>
-            <strong>Corpo & movimento</strong>
-            <small>Treinos, yoga e alongamento</small>
-          </button>
-          <button class="tile" onclick="showPage('diario')">
-            <span class="symbol">☾</span>
-            <strong>Meu diário</strong>
-            <small>Escreva para si</small>
-          </button>
-          <button class="tile" onclick="showPage('amigas')">
-            <span class="symbol">♧</span>
-            <strong>Amigas</strong>
-            <small>Crescer juntas</small>
-          </button>
-          <button class="tile" onclick="showPage('chat')">
-            <span class="symbol">♡</span>
-            <strong>Nossas conversas</strong>
-            <small>Mensagens e grupos</small>
-          </button>
-          <button class="tile" onclick="showPage('calendario')">
-            <span class="symbol">✧</span>
-            <strong>Calendário</strong>
-            <small>Planos e lembretes</small>
-          </button>
+          <button class="tile" onclick="showPage('rotina')"><span class="symbol">✧</span><strong>Meus rituais</strong><small>Hábitos e skincare</small></button>
+          <button class="tile" onclick="showPage('corpo')"><span class="symbol">❋</span><strong>Corpo & movimento</strong><small>Treinos, yoga e alongamento</small></button>
+          <button class="tile" onclick="showPage('diario')"><span class="symbol">☾</span><strong>Meu diário</strong><small>Escreva para si</small></button>
+          <button class="tile" onclick="showPage('amigas')"><span class="symbol">♧</span><strong>Amigas</strong><small>Crescer juntas</small></button>
+          <button class="tile" onclick="showPage('chat')"><span class="symbol">♡</span><strong>Nossas conversas</strong><small>Mensagens e grupos</small></button>
+          <button class="tile" onclick="showPage('calendario')"><span class="symbol">✧</span><strong>Calendário</strong><small>Planos e lembretes</small></button>
         </div>
-
         <footer>GROW AT YOUR OWN PACE</footer>
       </section>
 
@@ -491,7 +409,6 @@
         <p class="eyebrow">Your daily rituals</p>
         <h2 class="greeting">Meus <em>rituais.</em></h2>
         <p class="muted">Pequenos gestos, feitos com intenção.</p>
-
         <div class="panel">
           <h3>Rotina de hoje</h3>
           <label class="check-row"><input type="checkbox"> Skincare da manhã</label>
@@ -500,13 +417,9 @@
           <label class="check-row"><input type="checkbox"> Skincare da noite</label>
           <label class="check-row"><input type="checkbox"> Organizar o dia de amanhã</label>
         </div>
-
         <div class="panel">
           <h3>Meus produtos</h3>
-          <p class="muted small">
-            Aqui ficará sua coleção de produtos, etapas da rotina
-            e frequência de uso.
-          </p>
+          <p class="muted small">Aqui ficará sua coleção de produtos, etapas da rotina e frequência de uso.</p>
           <span class="tag">Em preparação</span>
         </div>
       </section>
@@ -531,14 +444,9 @@
         <h2 class="greeting">Meu <em>diário.</em></h2>
         <div class="panel">
           <h3>Como você está se sentindo?</h3>
-          <p class="muted small">
-            Seu diário será privado por padrão.
-            Não escreva informações sensíveis nesta versão inicial:
-            o salvamento seguro será configurado na próxima etapa.
-          </p>
-          <textarea class="field" rows="5"
-            placeholder="O que está passando pelo seu coração?"></textarea>
-          <span class="tag">Área visual — salvamento ainda não ativado</span>
+          <p class="muted small">Seu diário será privado por padrão. Nesta versão, o texto não é salvo.</p>
+          <textarea class="field" rows="5" placeholder="O que está passando pelo seu coração?"></textarea>
+          <span class="tag">Salvamento ainda não ativado</span>
         </div>
       </section>
 
@@ -547,14 +455,8 @@
         <h2 class="greeting">Nosso <em>círculo.</em></h2>
         <div class="panel">
           <h3>Suas amigas</h3>
-          <p class="muted small">
-            Convide suas amigas por e-mail ou código de convite.
-            Cada uma terá seu perfil e escolherá as atividades que deseja compartilhar.
-          </p>
-          <p class="notice">
-            A busca de amigas, os convites e os perfis compartilhados
-            serão ativados depois de configurarmos o banco e as permissões.
-          </p>
+          <p class="muted small">Convide suas amigas por e-mail ou código de convite. Cada uma terá seu perfil e escolherá as atividades que deseja compartilhar.</p>
+          <p class="notice">A busca de amigas, os convites e os perfis compartilhados serão ativados após configurarmos o banco e as permissões.</p>
           <span class="tag">Amizades ainda não conectadas</span>
         </div>
       </section>
@@ -565,16 +467,10 @@
         <div class="panel">
           <h3>Mensagens</h3>
           <div class="message-placeholder">
-            ♡<br><br>
-            “Amiga, bora treinar hoje?”<br>
-            “Você já fez seu skincare?”<br><br>
-            Suas conversas individuais e em grupo
-            aparecerão aqui quando o chat estiver conectado.
+            ♡<br><br>“Amiga, bora treinar hoje?”<br>“Você já fez seu skincare?”<br><br>
+            Suas conversas individuais e em grupo aparecerão aqui quando o chat estiver conectado.
           </div>
-          <p class="notice">
-            Não envie mensagens nesta tela ainda: o chat real será
-            implementado com autenticação, participantes e regras de acesso.
-          </p>
+          <p class="notice">O chat real ainda não está conectado nesta versão.</p>
         </div>
       </section>
 
@@ -583,11 +479,7 @@
         <h2 class="greeting">Seu <em>calendário.</em></h2>
         <div class="panel">
           <h3>Planos e lembretes</h3>
-          <p class="muted small">
-            Seus compromissos, rotinas e metas terão uma visão
-            diária e mensal. Também poderemos criar lembretes
-            compartilhados com suas amigas.
-          </p>
+          <p class="muted small">Seus compromissos, rotinas e metas terão uma visão diária e mensal. Também poderemos criar lembretes compartilhados com suas amigas.</p>
           <span class="tag">Calendário em preparação</span>
         </div>
       </section>
@@ -598,10 +490,7 @@
         <div class="panel">
           <span id="profileAvatar" class="avatar">R</span>
           <h3 id="profileEmail"></h3>
-          <p class="muted small">
-            Você poderá personalizar seu nome, foto e preferências
-            de compartilhamento.
-          </p>
+          <p class="muted small">Você poderá personalizar seu nome, foto e preferências de compartilhamento.</p>
           <button id="logoutButton" class="secondary">Sair da conta</button>
         </div>
       </section>
@@ -617,13 +506,7 @@
   </section>
 
   <script>
-    /*
-      RITUAL — CONFIGURAÇÃO
-      Use apenas a Project URL e a Publishable key
-      do projeto Supabase EXCLUSIVO do Ritual.
-      Nunca coloque uma Secret key neste arquivo.
-    */
-    const SUPABASE_URL =  "https://oonywrgosclyexxlnncq.supabase.co/rest/v1/";
+    const SUPABASE_URL = "https://oonywrgosclyexxlnncq.supabase.co";
     const SUPABASE_KEY = "sb_publishable_3MQZTB8rdvpL8b6S5SjWVw_CUHm-HzA";
 
     let supabaseClient = null;
@@ -634,50 +517,23 @@
     const authStatus = document.getElementById("authStatus");
     const authForm = document.getElementById("authForm");
 
+    const loginButton = document.getElementById("loginButton");
+    const signupButton = document.getElementById("signupButton");
+    const resetButton = document.getElementById("resetButton");
+    const logoutButton = document.getElementById("logoutButton");
+
     function setStatus(message) {
       authStatus.textContent = message;
-    }
-
-    function configured() {
-      return SUPABASE_URL.startsWith("https://") &&
-        SUPABASE_KEY.startsWith("sb_publishable_") ||
-        (SUPABASE_URL.startsWith("https://") &&
-        SUPABASE_KEY.startsWith("eyJ"));
-    }
-
-    function getInitial(email) {
-      return (email || "R").trim().charAt(0).toUpperCase();
-    }
-
-    function openApp(user) {
-      currentUser = user;
-      authScreen.classList.add("hidden");
-      appScreen.classList.remove("hidden");
-
-      const email = user.email || "";
-      const initial = getInitial(email);
-
-      document.getElementById("welcome").textContent =
-        "Conectada como " + email;
-      document.getElementById("profileEmail").textContent = email;
-      document.getElementById("avatar").textContent = initial;
-      document.getElementById("profileAvatar").textContent = initial;
-
-      const today = new Date();
-      document.getElementById("today").textContent =
-        today.toLocaleDateString("pt-BR", {
-          weekday: "long",
-          day: "numeric",
-          month: "long"
-        });
-
-      showPage("inicio");
     }
 
     function showAuth(message = "") {
       appScreen.classList.add("hidden");
       authScreen.classList.remove("hidden");
       setStatus(message);
+    }
+
+    function getInitial(email) {
+      return (email || "R").trim().charAt(0).toUpperCase();
     }
 
     function showPage(name) {
@@ -689,196 +545,229 @@
       if (page) page.classList.remove("hidden");
 
       document.querySelectorAll(".nav-button").forEach(button => {
-        button.classList.toggle(
-          "active",
-          button.dataset.page === name
-        );
+        button.classList.toggle("active", button.dataset.page === name);
       });
 
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    async function init() {
-      if (!configured()) {
-        showAuth("Falta configurar a URL e a chave publicável do Supabase.");
+    function openApp(user) {
+      if (!user) {
+        showAuth("Não foi possível identificar sua conta. Entre novamente.");
         return;
       }
 
-      if (!window.supabase) {
-        showAuth("Não foi possível carregar o serviço de autenticação. Verifique sua conexão.");
-        return;
-      }
+      currentUser = user;
+      authScreen.classList.add("hidden");
+      appScreen.classList.remove("hidden");
 
-      supabaseClient = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-      );
+      const email = user.email || "";
+      const initial = getInitial(email);
 
-      const { data, error } = await supabaseClient.auth.getSession();
+      document.getElementById("welcome").textContent = "Conectada como " + email;
+      document.getElementById("profileEmail").textContent = email;
+      document.getElementById("avatar").textContent = initial;
+      document.getElementById("profileAvatar").textContent = initial;
 
-      if (error) {
-        showAuth("Não foi possível verificar sua sessão. Tente novamente.");
-        return;
-      }
+      document.getElementById("today").textContent =
+        new Date().toLocaleDateString("pt-BR", {
+          weekday: "long",
+          day: "numeric",
+          month: "long"
+        });
 
-      if (data.session) {
-        openApp(data.session.user);
-      }
-
-      supabaseClient.auth.onAuthStateChange((_event, session) => {
-        if (session) {
-          openApp(session.user);
-        } else {
-          currentUser = null;
-          showAuth();
-        }
-      });
+      showPage("inicio");
     }
 
+    async function init() {
+      showAuth("Carregando o Ritual...");
+
+      if (!window.supabase) {
+        showAuth("Não foi possível carregar a autenticação. Verifique sua conexão.");
+        return;
+      }
+
+      try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const { data, error } = await supabaseClient.auth.getSession();
+
+        if (error) {
+          showAuth("Erro ao verificar sua sessão: " + error.message);
+          return;
+        }
+
+        if (data.session?.user) {
+          openApp(data.session.user);
+        } else {
+          showAuth();
+        }
+
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+          if (
+            session?.user &&
+            ["SIGNED_IN", "TOKEN_REFRESHED", "USER_UPDATED"].includes(event)
+          ) {
+            openApp(session.user);
+          } else if (event === "SIGNED_OUT") {
+            currentUser = null;
+            showAuth("Você saiu da sua conta.");
+          }
+        });
+      } catch (error) {
+        console.error("Erro ao iniciar o Ritual:", error);
+        showAuth("Não foi possível iniciar o aplicativo. Tente novamente.");
+      }
+    }
+
+    // Entrar
     authForm.addEventListener("submit", async event => {
       event.preventDefault();
 
       if (!supabaseClient) {
-        setStatus("Configure primeiro a URL e a chave publicável do Supabase.");
+        setStatus("A autenticação ainda está carregando. Tente novamente.");
         return;
       }
 
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
 
-      const button = document.getElementById("loginButton");
-      button.disabled = true;
+      loginButton.disabled = true;
       setStatus("Entrando...");
 
       try {
-        const { data, error } =
-  await supabaseClient.auth.signInWithPassword({
-    email,
-    password
-  });
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
 
-if (error) {
-  setStatus("Falha no login: " + error.message);
-  return;
-}
+        if (error) {
+          setStatus("Não foi possível entrar: " + error.message);
+          return;
+        }
 
-setStatus(
-  "Login aceito. Sessão: " +
-  (data.session ? "recebida" : "ausente") +
-  ". Abrindo o aplicativo..."
-);
-
-if (data.user && data.session) {
-  openApp(data.user);
-}
-
-        if (error) throw error;
-
-console.log("LOGIN: resposta recebida", {
-  user: !!data.user,
-  session: !!data.session
-});
-
-if (data.session && data.user) {
-  setStatus("Login confirmado! Abrindo o Ritual...");
-  openApp(data.user);
-} else {
-  setStatus("O login não retornou uma sessão. Verifique a configuração de autenticação.");
-}
+        if (data.session?.user) {
+          openApp(data.session.user);
+        } else {
+          setStatus("O login não retornou uma sessão. Verifique a autenticação.");
+        }
       } catch (error) {
-  console.error("Erro de login:", error);
-  setStatus(`Erro de login: ${error.message || "Erro desconhecido"}`);
-} finally {
-        button.disabled = false;
+        console.error("Erro de login:", error);
+        setStatus("Erro de login: " + (error.message || "Erro desconhecido."));
+      } finally {
+        loginButton.disabled = false;
       }
     });
 
-    document.getElementById("signupButton").addEventListener(
-      "click", async () => {
-        if (!supabaseClient) {
-          setStatus("Configure primeiro a URL e a chave publicável do Supabase.");
-          return;
-        }
-
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
-
-        if (!email || password.length < 6) {
-          setStatus("Informe um e-mail válido e uma senha com pelo menos 6 caracteres.");
-          return;
-        }
-
-        setStatus("Criando sua conta...");
-
-        try {
-          const { data, error } = await supabaseClient.auth.signUp({
-            email,
-            password,
-            options: {
-              emailRedirectTo: window.location.origin +
-                window.location.pathname
-            }
-          });
-
-          if (error) throw error;
-
-          if (data.session) {
-            openApp(data.session.user);
-          } else {
-            setStatus("Conta criada! Confira seu e-mail para confirmar o cadastro antes de entrar.");
-          }
-        
-      } catch (error) {
-  console.error("Erro ao criar conta:", error);
-  setStatus(`Erro ao criar conta: ${error.message || "Erro desconhecido"}`);
-}
-    );
-
-    document.getElementById("resetButton").addEventListener(
-      "click", async () => {
-        if (!supabaseClient) {
-          setStatus("Configure primeiro a URL e a chave publicável do Supabase.");
-          return;
-        }
-
-        const email = document.getElementById("email").value.trim();
-
-        if (!email) {
-          setStatus("Digite seu e-mail no campo acima.");
-          return;
-        }
-
-        setStatus("Enviando solicitação...");
-
-        try {
-          const { error } =
-            await supabaseClient.auth.resetPasswordForEmail(email, {
-              redirectTo: window.location.origin +
-                window.location.pathname
-            });
-
-          if (error) throw error;
-
-          setStatus("Se o endereço estiver cadastrado, você receberá instruções por e-mail.");
-        } catch (error) {
-          setStatus("Não foi possível solicitar a recuperação agora.");
-        }
+    // Criar conta
+    signupButton.addEventListener("click", async () => {
+      if (!supabaseClient) {
+        setStatus("A autenticação ainda está carregando. Tente novamente.");
+        return;
       }
-    );
 
-    document.getElementById("logoutButton").addEventListener(
-      "click", async () => {
-        if (!supabaseClient) return;
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
 
+      if (!email || !password) {
+        setStatus("Informe um e-mail e uma senha.");
+        return;
+      }
+
+      if (password.length < 6) {
+        setStatus("Sua senha precisa ter pelo menos 6 caracteres.");
+        return;
+      }
+
+      signupButton.disabled = true;
+      setStatus("Criando sua conta...");
+
+      try {
+        const { data, error } = await supabaseClient.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: window.location.origin + window.location.pathname
+          }
+        });
+
+        if (error) {
+          setStatus("Não foi possível criar a conta: " + error.message);
+          return;
+        }
+
+        if (data.session?.user) {
+          openApp(data.session.user);
+        } else {
+          setStatus("Conta criada. Confirme seu e-mail, se solicitado, e depois entre.");
+        }
+      } catch (error) {
+        console.error("Erro ao criar conta:", error);
+        setStatus("Erro ao criar conta: " + (error.message || "Erro desconhecido."));
+      } finally {
+        signupButton.disabled = false;
+      }
+    });
+
+    // Recuperar senha
+    resetButton.addEventListener("click", async () => {
+      if (!supabaseClient) {
+        setStatus("A autenticação ainda está carregando. Tente novamente.");
+        return;
+      }
+
+      const email = document.getElementById("email").value.trim();
+
+      if (!email) {
+        setStatus("Digite seu e-mail antes de solicitar a recuperação.");
+        return;
+      }
+
+      resetButton.disabled = true;
+      setStatus("Enviando solicitação de recuperação...");
+
+      try {
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin + window.location.pathname
+        });
+
+        if (error) {
+          setStatus("Não foi possível solicitar a recuperação: " + error.message);
+          return;
+        }
+
+        setStatus("Se o e-mail estiver cadastrado, você receberá instruções para recuperar a senha.");
+      } catch (error) {
+        console.error("Erro ao recuperar senha:", error);
+        setStatus("Erro na recuperação: " + (error.message || "Erro desconhecido."));
+      } finally {
+        resetButton.disabled = false;
+      }
+    });
+
+    // Sair da conta
+    logoutButton.addEventListener("click", async () => {
+      if (!supabaseClient) return;
+
+      logoutButton.disabled = true;
+
+      try {
         const { error } = await supabaseClient.auth.signOut();
 
         if (error) {
-          alert("Não foi possível sair da conta. Tente novamente.");
-        } else {
-          showAuth("Você saiu da sua conta.");
+          setStatus("Não foi possível sair: " + error.message);
+          return;
         }
+
+        currentUser = null;
+        showAuth("Você saiu da sua conta.");
+      } catch (error) {
+        console.error("Erro ao sair:", error);
+        setStatus("Erro ao sair: " + (error.message || "Erro desconhecido."));
+      } finally {
+        logoutButton.disabled = false;
       }
-    );
+    });
 
     init();
   </script>
